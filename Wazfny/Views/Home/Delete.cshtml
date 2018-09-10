@@ -1,0 +1,56 @@
+﻿@model Wazfny.Models.ApplyForJob
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+
+<h3>هل تريد حذف هذه الوظيفة؟</h3>
+<div>
+    <h4>تفاصيل الوظيفة</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.job.JobTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.job.JobTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("إسم المُستخدم")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.user.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplyDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApplyDate)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="تأكيد الحذف" class="btn btn-danger" /> |
+            @Html.ActionLink("الرجوع إلى قائمة الوظائف", "GetJobsByUser")
+        </div>
+    }
+</div>

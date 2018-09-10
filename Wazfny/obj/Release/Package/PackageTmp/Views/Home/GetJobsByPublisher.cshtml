@@ -1,0 +1,56 @@
+﻿@using Wazfny.Models
+@model IEnumerable<Wazfny.Models.Job>
+
+@{
+    ViewBag.Title = "GetJobsByPublisher";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>كل الوظائف التى تم نشرها خاصتك.</h2>
+<hr />
+<p>
+    @Html.ActionLink("إنشاء وظيفة أخرى", "Create","Job")
+</p>
+@foreach (var job in Model)
+{
+    ApplicationDbContext db = new ApplicationDbContext();
+    var JobApplicants = db.ApplyForJobs.Where(j => j.JobId == job.Id).ToList();
+
+    <div class="panel panel-default">
+        <h1 class="panel-heading">@job.JobTitle</h1>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped table-hover table-condensed">
+                <tr>
+                    <th>
+                        إسم المتقدم
+                    </th>
+                    <th>
+                        رسالة التقدم
+                    </th>
+                    <th>
+                        تاريخ التقدم
+                    </th>
+
+                </tr>
+
+                @foreach (var applicant in JobApplicants)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => applicant.user.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => applicant.Message)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => applicant.ApplyDate)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+}
+
+

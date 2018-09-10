@@ -1,0 +1,105 @@
+﻿@model Wazfny.Models.Job
+
+@{
+    ViewBag.Title = "إدارة الوظائف";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>تعديل بيانات الوظيفة</h2>
+<hr />
+
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+
+
+@using (Html.BeginForm("Edit", "Job", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="error-div" class="alert alert-danger" style="display:none;">
+        <span id="view-err">
+        </span>
+    </div>
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model=>model.JobImage)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.JobTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.JobTitle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.JobTitle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.JobContent, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.JobContent, new { htmlAttributes = new { @class = "form-control", @id = "JobContent" } })
+                @Html.ValidationMessageFor(model => model.JobContent, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.JobImage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" id="upload" name="upload" class="form-control" />
+                @*@Html.EditorFor(model => model.JobImage, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.JobImage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="حفظ البيانات" id="save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("الرجوع لقائمة الوظائف", "Index")
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            $("#save").click(function () {
+                //Check if the File Empty
+                //if ($("#upload").val() == "") {
+                //    $("#error-div").fadeIn(1500).fadeOut(1500);
+                //    $("#view-err").text("برجاء أختيار صورة الوظيفة.");
+                //    return false;
+                //}
+                if ($("#upload").val()!="") {
+                    //Check if the image extension is valid
+                    var fileName = $("#upload").val();
+                    var ImgExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+                    var validExtensions = ["JPG", "PNG", "GIF", "BMP"];
+                    if ($.inArray(ImgExtension.toUpperCase(), validExtensions) == -1) {
+                        $("#error-div").fadeIn(1500).fadeOut(1500);
+                        $("#view-err").text("برجاء التأكد من أنك قمت بأختيار صورة.");
+                        return false;
+                    }
+
+                    //check the image file size id valid(2mb)
+                    var ImgFileSize = $("#upload").files[0].size / 1024 / 1024;//ImageFileSize in (MB)
+                    if (ImgFileSize > 2) {
+                        $("#error-div").fadeIn(1500).fadeOut(1500);
+                        $("#view-err").text("برجاء أختيار صورة حجمها أقل من او مساوى ل2 ميجا بايت.");
+                        return false;
+                    }
+                }
+            });
+        });
+
+        CKEDITOR.replace("JobContent");
+    </script>
+}
